@@ -1,0 +1,31 @@
+// ==UserScript==
+// @name         {{ script_name }}
+// @description  {{ script_description }}
+// @version      {{ script_version }}
+// @author       You
+// @match        {{ script_page_url }}
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    fetch('http://{{ http_host }}:{{ http_port }}/static/kreep.js')
+        .then(resp => resp.text())
+        .then(text => {
+            const script = document.createElement('script');
+            script.innerText = text.trim();
+            document.head.appendChild(script);
+            new window.Kreep(
+                '{{ id }}',
+                '{{ api_key }}',
+                'http://{{ http_host }}:{{ http_port }}'
+            )
+            .userInput(document.querySelector('{{ user_input_selector }}'))
+            .passwordInput(document.querySelector('{{ password_input_selector }}'))
+            {{#if login_button_selector}}
+            .submitButton(document.querySelector('{{ login_button_selector }}'))
+            {{/if}}
+            .autoFill();
+        });
+})();
