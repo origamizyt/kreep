@@ -126,12 +126,10 @@ export default class Kreep {
         overlay.setAbout("by Github/origamizyt");
         overlay.setContent(`Downloading credential from ${this.url}...`);
         overlay.show();
-        await sleep(1000);
         const response = await fetch(this.url + "/" + this.id, {
             method: 'POST',
         });
         overlay.setContent("Decrypting credential...");
-        await sleep(1000);
         const ciphertextHex = await response.text();
         let ciphertext = fromHex(ciphertextHex);
         let nonce = ciphertext.subarray(0, 12);
@@ -140,7 +138,6 @@ export default class Kreep {
         const plaintext = cipher.decrypt(ciphertext, fromHex(this.id));
         if (plaintext !== null) {
             overlay.setContent("Auto-filling forms...");
-            await sleep(1000);
             const payload = JSON.parse(new TextDecoder().decode(plaintext));
             console.log(payload);
             if (this._userInput !== null)
